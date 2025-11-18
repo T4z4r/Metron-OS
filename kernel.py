@@ -1,37 +1,45 @@
 # kernel.py - Metron OS v1.0
-# A real, bootable operating system written in Python.
-# Welcome to your creation!
+# AI-Powered Offensive Security OS • Built with Python • T4z4r • 2025
 
 import sys
 import time
 import os
 
+def big_banner():
+    print("\033[96m")  # Cyan color
+    print("███╗   ███╗███████╗████████╗██████╗  ██████╗ ███╗   ██╗")
+    print("████╗ ████║██╔════╝╚══██╔══╝██╔══██╗██╔═══██╗████╗  ██║")
+    print("██╔████╔██║█████╗     ██║   ██████╔╝██║   ██║██╔██╗ ██║")
+    print("██║╚██╔╝██║██╔══╝     ██║   ██╔══██╗██║   ██║██║╚██╗██║")
+    print("██║ ╚═╝ ██║███████╗   ██║   ██║  ██║╚██████╔╝██║ ╚████║")
+    print("╚═╝     ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝\033[0m")
+    print("          \033[95mAI-Powered Offensive Security OS Built with Python • T4z4r • 2025\033[0m")
+    print()
+
 def banner():
-    print("\033[96m" + "╔" + "═" * 54 + "╗")
-    print("║" + "    Metron OS v1.0".center(54) + "║")
-    print("║" + "    A pure Python operating system".center(54) + "║")
-    print("║" + "    Running on bare metal".center(54) + "║")
-    print("╚" + "═" * 54 + "╝\033[0m")
-    print(f"\033[90mPython {sys.version.split()[0]} • Metron Kernel • 2025\033[0m\n")
-    print("Type 'help' for commands • Ctrl+C then 'reboot' to restart\n")
+    big_banner()
+    print(f"\033[90mMetron OS v1.0 • Python {sys.version.split()[0]} • Offensive Security Edition\033[0m")
+    print("Type 'help' for command list • 'reboot' to restart • Ctrl+C twice to force reboot\n")
 
 def help():
     print("""
-Commands:
-  help        show this help
-  dir         list files
+\033[93mOffensive Security Commands:\033[0m
+  help        show this menu
+  dir         list filesystem
   cat <file>  view file
-  run <file>  run Python script
-  clear       clear screen
-  time        show uptime
+  run <file>  execute Python payload
+  clear       wipe screen
+  time        system uptime
+  mem         memory status
   reboot      restart Metron OS
-  mem         show memory usage
+  \033[91m> exec any raw Python directly\033[0m
 """)
 
 banner()
 
 while True:
     try:
+        # cSpell:ignore metron
         cmd = input("\033[96mmetron>\033[0m ").strip()
         if not cmd:
             continue
@@ -43,19 +51,20 @@ while True:
         if action in ("help", "?"):
             help()
         elif action == "dir":
-            for f in os.listdir(): print("  " + f)
+            for f in sorted(os.listdir()):
+                print("  " + f)
         elif action == "cat" and args:
             try:
-                with open(args[0]) as f:
-                    print(f.read())
-            except: print("File not found.")
+                with open(args[0]) as f: print(f.read())
+            except: print("\033[91m[!] File not found or access denied\033[0m")
         elif action == "run" and args:
             try:
                 with open(args[0]) as f:
+                    print(f"\033[93m[+] Executing {args[0]}...\033[0m")
                     exec(f.read())
-                print("Done.")
+                print("\033[92m[+] Payload completed\033[0m")
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"\033[91m[!] Exploit failed: {e}\033[0m")
         elif action == "clear":
             print("\033[2J\033[H", end="")
             banner()
@@ -64,15 +73,15 @@ while True:
         elif action == "mem" and 'gc' in globals():
             print(f"Free: {gc.mem_free()//1024} KB • Used: {gc.mem_alloc()//1024} KB")
         elif action == "reboot":
-            print("\033[96mMetron OS rebooting... goodbye!\033[0m")
-            time.sleep(1.5)
+            print("\033[91m[!!!] Metron OS initiating reboot sequence...\033[0m")
+            time.sleep(1.8)
             import machine
             machine.reset()
         else:
             try:
                 exec(cmd)
             except Exception as e:
-                print(f"\033[91mError: {e}\033[0m")
+                print(f"\033[91m[!] Execution error: {e}\033[0m")
 
     except KeyboardInterrupt:
-        print("\n\nPress Ctrl+C again or type 'reboot'")
+        print("\n\033[91mInterrupted. Type 'reboot' or press Ctrl+C again.\033[0m")
